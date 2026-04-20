@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Calendar Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <h1>Weekly Dashboard</h1>
 
   <div id="app">
@@ -14,13 +13,11 @@
   </div>
 
   <h2>Sign In</h2>
-  <input type="email" id="email" placeholder="Enter your email">
-  <button onclick="signIn()">Send Magic Link</button>
+  <input type="email" id="email" placeholder="Enter your email" />
+  <button id="signInBtn">Send Magic Link</button>
 
-  <p id="status">Checking sign-in status...</p>
+  <p id="status">Loading...</p>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
-
+  <script type="module" src="app.js"></script>
 </body>
 </html>
