@@ -1,25 +1,24 @@
-const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL_HERE";
-const SUPABASE_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+const SUPABASE_URL = "https://jbbkugzkdqsxmwzevijp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_cXiF4_yc_YDQprQNiNzWIQ_nE2Ub1w2";
 
-const statusEl = document.getElementById("status");
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Get status element safely after page loads
+function getStatusEl() {
+  return document.getElementById("status");
+}
 
 function setStatus(message) {
-  if (statusEl) statusEl.textContent = message;
+  const el = getStatusEl();
+  if (el) el.textContent = message;
   console.log(message);
 }
 
-let supabaseClient;
-
-try {
-  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  setStatus("Supabase client created.");
-} catch (err) {
-  setStatus("Error creating Supabase client: " + err.message);
-}
-
+// ✉️ Send Magic Link
 async function signIn() {
   try {
-    const email = document.getElementById("email").value.trim();
+    const emailInput = document.getElementById("email");
+    const email = emailInput ? emailInput.value.trim() : "";
 
     if (!email) {
       setStatus("Please enter your email.");
@@ -45,6 +44,7 @@ async function signIn() {
   }
 }
 
+// 🔍 Check if user is already signed in
 async function checkUser() {
   try {
     setStatus("Checking sign-in status...");
@@ -66,4 +66,14 @@ async function checkUser() {
   }
 }
 
-checkUser();
+// 🔄 Listen for login changes (important for Magic Link return)
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (session?.user) {
+    setStatus(`Signed in as ${session.user.email}`);
+  }
+});
+
+// Run on page load
+document.addEventListener("DOMContentLoaded", () => {
+  checkUser();
+});
