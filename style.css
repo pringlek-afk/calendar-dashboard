@@ -1,0 +1,19 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.day {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+}
