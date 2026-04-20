@@ -22,3 +22,9 @@
 
 </body>
 </html>
+async function checkUser() {
+  const { data, error } = await supabaseClient.auth.getUser();
+  console.log("USER:", data.user, error);
+}
+
+checkUser();
