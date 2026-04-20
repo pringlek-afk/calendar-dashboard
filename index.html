@@ -7,24 +7,20 @@
 </head>
 <body>
 
-<h1>Weekly Dashboard</h1>
+  <h1>Weekly Dashboard</h1>
 
-<div id="app">
-  <!-- Days will go here -->
-</div>
+  <div id="app">
+    <!-- Days will go here -->
+  </div>
 
-<h2>Sign In</h2>
-<input type="email" id="email" placeholder="Enter your email">
-<button onclick="signIn()">Send Magic Link</button>
+  <h2>Sign In</h2>
+  <input type="email" id="email" placeholder="Enter your email">
+  <button onclick="signIn()">Send Magic Link</button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js"></script>
+  <p id="status">Checking sign-in status...</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
-async function checkUser() {
-  const { data, error } = await supabaseClient.auth.getUser();
-  console.log("USER:", data.user, error);
-}
-
-checkUser();
