@@ -1,24 +1,43 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const SUPABASE_URL = "https://jbbkugzkdqsxmwzevijp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_cXiF4_yc_YDQprQNiNzWIQ_nE2Ub1w2";
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// Get status element safely after page loads
-function getStatusEl() {
-  return document.getElementById("status");
-}
+const statusEl = document.getElementById("status");
+const signInBtn = document.getElementById("signInBtn");
+const emailInput = document.getElementById("email");
 
 function setStatus(message) {
-  const el = getStatusEl();
-  if (el) el.textContent = message;
+  if (statusEl) statusEl.textContent = message;
   console.log(message);
 }
 
-// ✉️ Send Magic Link
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function checkUser() {
+  try {
+    setStatus("Checking sign-in status...");
+
+    const { data, error } = await supabaseClient.auth.getUser();
+
+    if (error) {
+      setStatus("User check error: " + error.message);
+      return;
+    }
+
+    if (data.user) {
+      setStatus(`Signed in as ${data.user.email}`);
+    } else {
+      setStatus("Not signed in");
+    }
+  } catch (err) {
+    setStatus("User check crash: " + err.message);
+  }
+}
+
 async function signIn() {
   try {
-    const emailInput = document.getElementById("email");
-    const email = emailInput ? emailInput.value.trim() : "";
+    const email = emailInput?.value?.trim() || "";
 
     if (!email) {
       setStatus("Please enter your email.");
@@ -44,36 +63,12 @@ async function signIn() {
   }
 }
 
-// 🔍 Check if user is already signed in
-async function checkUser() {
-  try {
-    setStatus("Checking sign-in status...");
+signInBtn?.addEventListener("click", signIn);
 
-    const { data, error } = await supabaseClient.auth.getUser();
-
-    if (error) {
-      setStatus("User check error: " + error.message);
-      return;
-    }
-
-    if (data.user) {
-      setStatus(`Signed in as ${data.user.email}`);
-    } else {
-      setStatus("Not signed in");
-    }
-  } catch (err) {
-    setStatus("User check crash: " + err.message);
-  }
-}
-
-// 🔄 Listen for login changes (important for Magic Link return)
-supabaseClient.auth.onAuthStateChange((event, session) => {
+supabaseClient.auth.onAuthStateChange((_event, session) => {
   if (session?.user) {
     setStatus(`Signed in as ${session.user.email}`);
   }
 });
 
-// Run on page load
-document.addEventListener("DOMContentLoaded", () => {
-  checkUser();
-});
+checkUser();
